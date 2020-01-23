@@ -2,6 +2,9 @@
     <% @products.each do |p| %>
         <li class="product"> 
             <%= link_to p.name, p %>
+            <%= p.body %>
+            <%= p.price_in_cents %>
         </li>
     <% end %>
 </ul>
+
