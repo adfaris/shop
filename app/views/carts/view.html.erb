@@ -6,7 +6,7 @@
             <span class="quantity"> 
                 <%= item.quantity %>
             </span>
-            <%= item.product.name %>
+            <%= link_to item.product.name, product_path(item.product) %>
             <%= item.product.price_in_cents %>
         </li>
     <% end%>
