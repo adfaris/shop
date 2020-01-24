@@ -41,6 +41,8 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'rspec-rails', '4.0.0.beta3'
+  gem 'guard-rspec', require: false
+  gem 'terminal-notifier-guard'
 end
 
 group :test do
@@ -57,3 +59,5 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+

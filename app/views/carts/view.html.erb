@@ -1,0 +1,13 @@
+<h1> Your cart </h1>
+
+<ul class="cart"> 
+    <% @cart.line_items.each do |item| %>
+        <li class="product-<%= item.product.id %>"> 
+            <span class="quantity"> 
+                <%= item.quantity %>
+            </span>
+            <%= item.product.name %>
+            <%= item.product.price_in_cents %>
+        </li>
+    <% end%>
+</ul>

@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   # get '/product/:id', to: 'products#show', as: "product"
   resources :products, only: [:index, :show]
 
+  get '/cart', to: 'carts#view', as: 'cart'
+  post '/cart', to: 'carts#add', as: 'add_to_cart'
   # get '/', to: redirect { urls.products_path }, as: "root"
   root to: redirect { urls.products_path }
 

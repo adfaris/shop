@@ -20,14 +20,6 @@ RSpec.describe 'Products', type: :feature do
             click_on(product.name)
             expect(page.current_path).to eq(product_path(product))
         end 
-
-        it 'displays body content' do
-            expect(page).to have_content(product.body)
-        end 
-
-        it 'displays price' do
-            expect(page).to have_content(product.price_in_cents)
-        end
     end
 
     context 'show product' do
