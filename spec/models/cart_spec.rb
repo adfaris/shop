@@ -15,6 +15,48 @@ RSpec.describe Cart, type: :model do
         end
     end
 
+    # ClassName.total class method class#total instance method
+    describe '#total' do
+        context 'the cart is empty' do
+            let(:cart) { Cart.new({}) } 
+
+            it 'returns zero' do
+                expect(cart.total).to eq(0)
+            end
+        end
+
+        context 'the cart has one item' do
+            let!(:product) { FactoryBot.create(:product) }
+            let(:cart) { Cart.new({ product.id => 1 }) } 
+            
+            it 'returns the correct total' do 
+                expect(cart.total).to eq(product.price_in_cents)
+            end 
+        end
+
+        # context 'multiple items' do
+            context 'the cart has multiple items' do 
+                let(:product1) { FactoryBot.create(:product) }
+                let(:product2) { FactoryBot.create(:product) }
+                let(:cart) { Cart.new({ product1.id => 1, product2.id => 1})}
+
+                it 'returns the correct total' do
+                    expected_total = product1.price_in_cents + product2.price_in_cents
+                    expect(cart.total).to  eq(expected_total)
+                end
+            end 
+            context 'the cart has multiple of the same item' do
+                let(:product1) { FactoryBot.create(:product, price_in_cents: 100) }
+                let(:product2) { FactoryBot.create(:product, price_in_cents: 200)}
+                let(:cart) { Cart.new({ product1.id => 2, product2.id => 4})}
+
+                it 'returns the correct total' do
+                    expect(cart.total).to eq(1_000)
+                end
+                
+            end
+    end
+
     describe '#line_items' do
         context 'the cart is empty' do
             let(:cart) { Cart.new({}) }
@@ -115,5 +157,13 @@ RSpec.describe Cart, type: :model do
                 expect(cart.to_h).to eq({ 1 => 4, 2 => 2, 3 => 5 })
             end
         end
+
+        # context 'the cart displays the total price for each item in the cart' do
+        #     let(:cart) {Cart.new( { 1=>4, 2 =>2, 3=>5 })
+
+        #     it 'returns total price' do
+        #         expect()
+        #     end 
+        # end
     end
 end

@@ -27,6 +27,14 @@ class Cart
         @items
     end 
 
+    def total 
+        result = 0
+        line_items.each do |item|
+            result += item.product.price_in_cents * item.quantity
+        end
+        result
+    end 
+
     class LineItem
         attr_reader :quantity
 
