@@ -36,6 +36,10 @@ class Cart
         line_items.inject(0) { | total, item | total += item.total  } 
     end 
 
+    def price
+        Price.new(total)
+    end
+
     class LineItem
         attr_reader :quantity
 
@@ -51,5 +55,36 @@ class Cart
         def total
             product.price_in_cents * quantity
         end 
+
+        def unit_price
+            Price.new(product.price_in_cents)
+        end 
+
+        def price
+            Price.new(total)
+        end
+    end 
+
+    class Price 
+        def initialize(cents) 
+            @cents = cents
+        end 
+    
+        def to_s
+            result = "$"
+            result += (@cents/100).to_s 
+            result += "."
+
+            remainder = (@cents%100).to_s
+
+            if(@cents%100 < 10)
+                result += "0" + remainder
+            elsif(remainder.length == 1 )
+                result += remainder + "0"
+            else 
+                result += remainder
+            end
+            result
+        end
     end 
 end 

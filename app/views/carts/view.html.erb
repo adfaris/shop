@@ -1,13 +1,21 @@
-<h1> Your cart </h1>
+<div class="cart">
+    <h1> Your cart </h1>
 
-<ul class="cart"> 
-    <% @cart.line_items.each do |item| %>
-        <li class="product-<%= item.product.id %>"> 
-            <span class="quantity"> 
-                <%= item.quantity %>
-            </span>
-            <%= link_to item.product.name, product_path(item.product) %>
-            <%= item.product.price_in_cents %>
-        </li>
-    <% end%>
-</ul>
+    <ul class="items"> 
+        <% @cart.line_items.each do |item| %>
+            <li class="product-<%= item.product.id %>"> 
+                <span class="quantity"> 
+                    <%= item.quantity %>
+                </span>
+                <%= link_to item.product.name, product_path(item.product) %>
+                <%= item.unit_price %>
+                <span class="total"> 
+                    <%= item.price %>
+                </span>
+            </li>
+        <% end%>
+    </ul>
+    <span class="order-total">
+        <%= @cart.price %>
+    </span>
+</div>
