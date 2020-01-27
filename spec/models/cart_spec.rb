@@ -34,27 +34,26 @@ RSpec.describe Cart, type: :model do
             end 
         end
 
-        # context 'multiple items' do
-            context 'the cart has multiple items' do 
-                let(:product1) { FactoryBot.create(:product) }
-                let(:product2) { FactoryBot.create(:product) }
+        context 'the cart has multiple items' do
+            let(:product1) { FactoryBot.create(:product, price_in_cents: 100) }
+            let(:product2) { FactoryBot.create(:product, price_in_cents: 200)}
+
+            context 'with one of each item' do 
                 let(:cart) { Cart.new({ product1.id => 1, product2.id => 1})}
 
                 it 'returns the correct total' do
-                    expected_total = product1.price_in_cents + product2.price_in_cents
-                    expect(cart.total).to  eq(expected_total)
+                    expect(cart.total).to  eq(300)
                 end
             end 
-            context 'the cart has multiple of the same item' do
-                let(:product1) { FactoryBot.create(:product, price_in_cents: 100) }
-                let(:product2) { FactoryBot.create(:product, price_in_cents: 200)}
+
+            context 'with multiple of each item' do
                 let(:cart) { Cart.new({ product1.id => 2, product2.id => 4})}
 
                 it 'returns the correct total' do
                     expect(cart.total).to eq(1_000)
                 end
-                
             end
+        end
     end
 
     describe '#line_items' do
@@ -157,13 +156,5 @@ RSpec.describe Cart, type: :model do
                 expect(cart.to_h).to eq({ 1 => 4, 2 => 2, 3 => 5 })
             end
         end
-
-        # context 'the cart displays the total price for each item in the cart' do
-        #     let(:cart) {Cart.new( { 1=>4, 2 =>2, 3=>5 })
-
-        #     it 'returns total price' do
-        #         expect()
-        #     end 
-        # end
     end
 end

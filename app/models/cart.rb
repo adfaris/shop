@@ -28,11 +28,12 @@ class Cart
     end 
 
     def total 
-        result = 0
-        line_items.each do |item|
-            result += item.product.price_in_cents * item.quantity
-        end
-        result
+        # result = 0
+        # line_items.each do |item|
+        #     result += item.product.price_in_cents * item.quantity
+        # end
+        # result
+        line_items.inject(0) { | total, item | total += item.total  } 
     end 
 
     class LineItem
@@ -46,5 +47,9 @@ class Cart
         def product
             Product.find(@id)
         end
+
+        def total
+            product.price_in_cents * quantity
+        end 
     end 
 end 
