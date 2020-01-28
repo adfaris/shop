@@ -46,17 +46,45 @@ RSpec.describe 'Carts', type: :feature do
                 visit(cart_path)
             end
 
-            it 'the product 1 line item total is correct' do
+            it 'displays the correct total for the product 1 line item' do
                 expect(page.first("ul.items li.product-#{product1.id} span.total")).to have_content('$105.00')
             end
 
-            it 'the product 2 line item total is correct' do
+            it 'displays the correct total for the product 2 line item' do
                 expect(page.first("ul.items li.product-#{product2.id} span.total")).to have_content('$20.00')            
             end
 
-            it 'the order total is correct' do
-                expect(page.first("div.cart span.order-total")).to have_content('$125.00')            
+            context 'the cart does not have a coupon applied' do
+                it 'does not display an order subtotal' do
+                    
+                end
+
+                it 'does not display a discount amount' do
+                end
+
+                it 'displays the correct order total' do
+                    expect(page.first("div.cart span.order-total")).to have_content('$125.00')            
+                end
             end
+
+            context 'the cart has a coupon applied' do
+                before do
+                    fill_in('coupon_code', with: 'Save20')
+                    click_button('Apply coupon')
+                end
+
+                it 'displays the correct subtotal' do
+                    expect(page.first("div.cart span.order-subtotal")).to have_content('$125.00')
+                end
+                
+                it 'displays the discount amount' do
+                    expect(page.first("div.cart span.order-discount")).to have_content('-$20.00')
+                end
+
+                it 'displays the correct order total' do         
+                    expect(page.first("div.cart span.order-total")).to have_content('$105.00')            
+                end
+            end 
         end
         
         describe 'remove a line item from the cart' do

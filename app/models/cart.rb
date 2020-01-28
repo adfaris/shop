@@ -46,6 +46,12 @@ class Cart
         line_items.inject(0) { | total, item | total += item.total  } 
     end 
 
+    # def total 
+    # end
+    
+    # def discount
+    # end
+
     def price
         Price.new(total)
     end

@@ -21,7 +21,21 @@
             </li>
         <% end%>
     </ul>
-    <span class="order-total">
-        <%= @cart.price %>
-    </span>
+    <div class="apply-coupon"> 
+        <%= form_with(url: update_cart_path, method: :patch) do |form| %> 
+            <%= form.text_field :coupon_code %>
+            <%= form.submit "Apply coupon" %>
+        <% end %>
+    </div>
+    <div class="totals">
+        <span class="order-subtotal">
+            $125.00
+        </span>
+        <span class="order-discount">
+            -$20.00
+        </span>
+        <span class="order-total">
+            <%= @cart.price %>
+        </span>
+    </div>
 </div>
