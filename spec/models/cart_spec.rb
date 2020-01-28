@@ -4,24 +4,32 @@ RSpec.describe Cart, type: :model do
     describe '.new' do
         context 'valid arguments' do
             it 'does not raise an exception' do
-                expect { Cart.new({1 => 1}) }.not_to raise_exception
+                expect { Cart.new({1 => 1}, 0.1) }.not_to raise_exception
             end
         end
 
         context 'invalid arguments' do
-            it 'raises an ArgumentError' do
-                expect { Cart.new("string") }.to raise_exception(ArgumentError)
+            context 'items is not a Hash' do
+                it 'raises an ArgumentError' do
+                    expect { Cart.new("string") }.to raise_exception(ArgumentError)
+                end
+            end
+
+            context 'discount is not a Float' do
+                it 'raises an ArgumentError' do
+                    expect { Cart.new({}, "not a float") }.to raise_exception(ArgumentError)
+                end
             end
         end
     end
 
     # ClassName.total class method class#total instance method
-    describe '#total' do
+    describe '#subtotal' do
         context 'the cart is empty' do
             let(:cart) { Cart.new({}) } 
 
             it 'returns zero' do
-                expect(cart.total).to eq(0)
+                expect(cart.subtotal).to eq(0)
             end
         end
 
@@ -30,19 +38,19 @@ RSpec.describe Cart, type: :model do
             let(:cart) { Cart.new({ product.id => 1 }) } 
             
             it 'returns the correct total' do 
-                expect(cart.total).to eq(product.price_in_cents)
+                expect(cart.subtotal).to eq(product.price_in_cents)
             end 
         end
 
         context 'the cart has multiple items' do
-            let(:product1) { FactoryBot.create(:product, price_in_cents: 100) }
+            let(:product1) { FactoryBot.create(:product, price_in_cents: 100)}
             let(:product2) { FactoryBot.create(:product, price_in_cents: 200)}
 
             context 'with one of each item' do 
                 let(:cart) { Cart.new({ product1.id => 1, product2.id => 1})}
 
                 it 'returns the correct total' do
-                    expect(cart.total).to  eq(300)
+                    expect(cart.subtotal).to  eq(300)
                 end
             end 
 
@@ -50,8 +58,99 @@ RSpec.describe Cart, type: :model do
                 let(:cart) { Cart.new({ product1.id => 2, product2.id => 4})}
 
                 it 'returns the correct total' do
-                    expect(cart.total).to eq(1_000)
+                    expect(cart.subtotal).to eq(1_000)
                 end
+            end
+        end
+    end
+
+    describe '#total' do
+        context 'the  cart is empty' do
+            let(:cart) { Cart.new({}) }
+
+            it 'returns zero' do
+                expect(cart.total).to be(0)
+            end
+        end
+
+        context 'the cart has one item' do
+            let!(:product) { FactoryBot.create(:product, price_in_cents: 100) }
+            
+            context 'there is no discount applied' do
+                let(:cart) { Cart.new({ product.id => 1}) }
+
+                it 'returns the correct total' do
+                    expect(cart.total).to eq(100)
+                end
+            end
+
+            context 'there is a 20% off discount applied' do
+                let(:cart) { Cart.new({ product.id => 1}, 0.2) }
+
+                it 'returns the correct total after discount' do
+                    expect(cart.total).to eq(80)
+                end
+            end
+        end
+
+        context 'the cart has multiple items' do
+            let!(:product1) { FactoryBot.create(:product, price_in_cents: 1_000)}
+            let!(:product2) { FactoryBot.create(:product, price_in_cents: 2_000)}
+            
+            context 'there is no discount applied' do
+                context 'with one of each each item' do
+                    let(:cart) { Cart.new( { product1.id => 1, product2.id => 1 }) }
+                    
+                    it 'returns the correct total' do
+                        expect(cart.total).to eq(3_000)
+                    end
+                end 
+    
+                context 'with multiple of each item' do
+                    let(:cart) { Cart.new({ product1.id => 2, product2.id => 4})}
+    
+                    it 'returns the correct total' do
+                        expect(cart.total).to eq(10_000)
+                    end
+                end                       
+            end
+
+            context 'there is a 20% off discount applied' do
+                context 'with one of each each item' do
+                    let(:cart) { Cart.new( { product1.id => 1, product2.id => 1 }, 0.2) }
+                    
+                    it 'returns the correct total' do
+                        expect(cart.total).to eq(2_400)
+                    end
+                end 
+    
+                context 'with multiple of each item' do
+                    let(:cart) { Cart.new({ product1.id => 2, product2.id => 4}, 0.2)}
+    
+                    it 'returns the correct total' do
+                        expect(cart.total).to eq(8_000)
+                    end
+                end   
+            end
+        end
+    end
+
+    describe '#discount' do
+        let!(:product) { FactoryBot.create(:product, price_in_cents: 1_000) }
+
+        context 'the cart has a discount applied' do
+            let(:cart) { Cart.new({ product.id => 1 }, 0.2) }
+
+            it 'returns the correct discount' do
+                expect(cart.discount).to eq(200)
+            end
+        end
+
+        context 'the cart has no discount applied' do
+            let(:cart) { Cart.new({ product.id => 1 }) }
+
+            it 'returns zero' do
+                expect(cart.discount).to eq(0)
             end
         end
     end
@@ -198,6 +297,40 @@ RSpec.describe Cart, type: :model do
 
             it 'returns the correct Hash' do
                 expect(cart.to_h).to eq({ 1 => 4, 2 => 2, 3 => 5 })
+            end
+        end
+    end
+
+    describe '#totals' do
+        context 'the cart contains multiple quantity of multiple items' do
+            let!(:product1) { FactoryBot.create(:product, price_in_cents: 1_000)}
+            let!(:product2) { FactoryBot.create(:product, price_in_cents: 2_000)}
+            let(:cart) { Cart.new({ product1.id => 2, product2.id => 4}, 0.2)}
+
+            context 'valid arguments' do
+                context 'request subtotal' do
+                    it 'returns the correct price' do
+                        expect(cart.totals(:subtotal).to_s).to eq('$100.00')                                         
+                    end
+                end
+
+                context 'request discount' do
+                    it 'returns the correct price' do
+                        expect(cart.totals(:discount).to_s).to eq('$20.00')                    
+                    end
+                end
+
+                context 'request total' do
+                    it 'returns the correct price' do
+                      expect(cart.totals(:total).to_s).to eq('$80.00')
+                    end                                      
+                end
+            end
+
+            context 'invalid arguments' do
+                it 'raises an error' do
+                   expect { cart.totals(:invalid) }.to raise_exception(ArgumentError) 
+                end
             end
         end
     end

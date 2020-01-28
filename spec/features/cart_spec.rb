@@ -78,11 +78,11 @@ RSpec.describe 'Carts', type: :feature do
                 end
                 
                 it 'displays the discount amount' do
-                    expect(page.first("div.cart span.order-discount")).to have_content('-$20.00')
+                    expect(page.first("div.cart span.order-discount")).to have_content('-$25.00')
                 end
 
                 it 'displays the correct order total' do         
-                    expect(page.first("div.cart span.order-total")).to have_content('$105.00')            
+                    expect(page.first("div.cart span.order-total")).to have_content('$100.00')            
                 end
             end 
         end

@@ -29,13 +29,13 @@
     </div>
     <div class="totals">
         <span class="order-subtotal">
-            $125.00
+            <%= @cart.totals(:subtotal) %>
         </span>
         <span class="order-discount">
-            -$20.00
+            -<%= @cart.totals(:discount) %>
         </span>
         <span class="order-total">
-            <%= @cart.price %>
+            <%= @cart.totals(:total) %>
         </span>
     </div>
 </div>

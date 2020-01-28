@@ -1,8 +1,12 @@
 class Cart
-    def initialize(item_hash)
+    def initialize(item_hash, discount=0.0)
         item_hash ||= {}
+
         raise ArgumentError if item_hash.class != Hash
+        raise ArgumentError if discount.class != Float
+
         @items = item_hash
+        @discount = discount
     end 
 
     def line_items
@@ -37,23 +41,27 @@ class Cart
         @items
     end 
 
-    def total 
+    def subtotal 
         # result = 0
         # line_items.each do |item|
         #     result += item.product.price_in_cents * item.quantity
         # end
         # result
-        line_items.inject(0) { | total, item | total += item.total  } 
+        line_items.inject(0) { | subtotal, item | subtotal += item.total  } 
     end 
 
-    # def total 
-    # end
-    
-    # def discount
-    # end
+    def discount
+        (subtotal * @discount).round
+    end
 
-    def price
-        Price.new(total)
+    def total
+        subtotal - discount
+    end
+
+    def totals(line_name)
+        raise ArgumentError unless [:subtotal, :discount, :total].include?(line_name)
+
+        Money.new(send(line_name))
     end
 
     class LineItem
@@ -73,15 +81,15 @@ class Cart
         end 
 
         def unit_price
-            Price.new(product.price_in_cents)
+            Money.new(product.price_in_cents)
         end 
 
         def price
-            Price.new(total)
+            Money.new(total)
         end
     end 
 
-    class Price 
+    class Money 
         def initialize(cents) 
             @cents = cents
         end 
