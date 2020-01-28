@@ -19,6 +19,16 @@ class Cart
         LineItem.new(id, @items[id])
     end
 
+    def remove_by_id(id)
+        if(@items.keys.include?(id))
+            result = LineItem.new(id, @items[id])
+            @items.delete(id)
+            result
+        else
+           nil
+        end
+    end 
+
     def to_h
         # test passed with this code
         # hash_item = {}
@@ -71,20 +81,19 @@ class Cart
         end 
     
         def to_s
-            result = "$"
-            result += (@cents/100).to_s 
-            result += "."
-
-            remainder = (@cents%100).to_s
-
-            if(@cents%100 < 10)
-                result += "0" + remainder
-            elsif(remainder.length == 1 )
-                result += remainder + "0"
-            else 
-                result += remainder
-            end
-            result
+            # result = "$"
+            # result += (@cents/100).to_s
+            # result += "."
+            # remainder = (@cents%100).to_s
+            # if(@cents%100 < 10)
+            #     result += "0" + remainder
+            # elsif(remainder.length == 1 )
+            #     result += remainder + "0"
+            # else 
+            #     result += remainder
+            # end
+            # result
+            "$%0.2f" % [@cents/100.0]
         end
     end 
 end 

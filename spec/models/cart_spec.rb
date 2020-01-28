@@ -120,6 +120,50 @@ RSpec.describe Cart, type: :model do
         end
     end
 
+    describe '#remove_by_id' do
+        context 'the cart does not contain the item being removed' do
+            let(:cart) { Cart.new({})}
+
+            it 'returns nil' do
+                expect(cart.remove_by_id(1)).to eq(nil)
+            end
+        end
+
+        context 'the cart contains exactly one of the item being removed' do
+            let(:id)   { 1 }
+            let(:cart) { Cart.new({id => 1}) }
+
+            before do
+                @return_value = cart.remove_by_id(id)
+            end
+
+            it 'removes the item from the cart' do
+                expect(cart.to_h[id]).to eq(nil)
+            end
+            
+            it 'returns the removed Cart::LineItem' do
+                expect(@return_value).to be_a(Cart::LineItem)
+            end
+        end
+
+        context 'the cart contains many of the item being removed' do
+            let(:id)    { 1 }
+            let!(:cart) { Cart.new({id => 5}) }
+
+            before do
+                @return_value = cart.remove_by_id(id)
+            end
+
+            it 'removes the item from the cart' do
+                expect(cart.to_h[id]).to eq(nil)
+            end
+
+            it 'returns the removed Cart::LineItem' do 
+                expect(@return_value).to be_a(Cart::LineItem)
+            end
+        end 
+    end
+
     describe '#to_h' do
         context 'the cart is empty' do
             let(:cart) { Cart.new({}) }

@@ -29,18 +29,20 @@ RSpec.describe 'Carts', type: :feature do
         let!(:product1) { FactoryBot.create(:product, price_in_cents: 3_500) }
         let!(:product2) { FactoryBot.create(:product, price_in_cents: 1_000) }
         
+        before do
+            3.times do
+                visit product_path(product1)
+                click_button('Add to cart') 
+            end
+
+            2.times do
+                visit product_path(product2)
+                click_button('Add to cart') 
+            end
+        end
+
         describe 'cart displays the totals' do
             before do
-                3.times do
-                    visit product_path(product1)
-                    click_button('Add to cart') 
-                end
-
-                2.times do
-                    visit product_path(product2)
-                    click_button('Add to cart') 
-                end
-
                 visit(cart_path)
             end
 
@@ -55,6 +57,21 @@ RSpec.describe 'Carts', type: :feature do
             it 'the order total is correct' do
                 expect(page.first("div.cart span.order-total")).to have_content('$125.00')            
             end
-        end      
+        end
+        
+        describe 'remove a line item from the cart' do
+            before do
+                visit(cart_path)
+                page.first("ul.items li.product-#{product1.id}").click_button("X")
+            end 
+
+            it 'removes the item from the cart' do
+                expect(page).not_to have_selector("ul.items li.product-#{product1.id}")
+            end
+
+            it 'does not remove the other item from the cart' do
+                expect(page.first("ul.items li.product-#{product2.id}")).not_to eq(nil)
+            end
+        end
     end
 end

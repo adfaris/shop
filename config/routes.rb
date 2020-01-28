@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   get '/cart', to: 'carts#view', as: 'cart'
   post '/cart', to: 'carts#add', as: 'add_to_cart'
+  delete '/cart', to: 'carts#remove', as: 'remove_from_cart'
+
   # get '/', to: redirect { urls.products_path }, as: "root"
   root to: redirect { urls.products_path }
 

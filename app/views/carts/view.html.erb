@@ -4,14 +4,20 @@
     <ul class="items"> 
         <% @cart.line_items.each do |item| %>
             <li class="product-<%= item.product.id %>"> 
+
                 <span class="quantity"> 
                     <%= item.quantity %>
                 </span>
+
                 <%= link_to item.product.name, product_path(item.product) %>
                 <%= item.unit_price %>
+                
                 <span class="total"> 
                     <%= item.price %>
                 </span>
+                
+                <%= button_to "X", remove_from_cart_path, method: :delete, params: {product_id: item.product.id} %>
+            
             </li>
         <% end%>
     </ul>
