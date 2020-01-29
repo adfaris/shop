@@ -65,7 +65,7 @@ class Cart
     end
 
     def total
-        total_before_tax - tax
+        total_before_tax + tax
     end
 
     def totals(line_name)

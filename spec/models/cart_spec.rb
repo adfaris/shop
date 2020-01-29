@@ -352,10 +352,9 @@ RSpec.describe Cart, type: :model do
 
                 context 'request tax' do
                     it 'reutrns the correct price' do
-                        expect(cart.totals(:total).to_s).to eq('$76.80')
+                        expect(cart.totals(:total).to_s).to eq('$83.20')
                     end
                 end
-
             end
 
             context 'invalid arguments' do

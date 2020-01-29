@@ -1,3 +1,29 @@
 // Place all the styles related to the carts controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.cart {
+    color: blue($color: #000000);
+    border: 2px solid;
+    padding: 0.1 rem;
+
+    .items {
+        background-color: gainsboro;
+        padding: 3rem;
+        display: block;
+        margin-left: 2rem;
+        margin-right: 2rem;
+    }
+        .apply-coupon {
+            margin-left: 2rem;
+            padding: 2rem;
+            background: gainsboro;
+            margin-right: 2rem;
+        }
+        .totals {
+            padding: 2rem;
+            margin-left: 2rem;
+            background: gainsboro;
+            margin-right: 2rem;
+            margin-bottom: 2rem;
+        }
+    }

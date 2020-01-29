@@ -56,7 +56,7 @@ RSpec.describe 'Carts', type: :feature do
 
             context 'the cart does not have a coupon applied' do
                 it 'does not display an order subtotal' do
-                    expect(page).not_to have_selector("div.cart span.order-subtotal")
+                    expect(page.first("div.cart div.order-subtotal")).to have_content("$125.00")
                 end
 
                 it 'does not display a discount amount' do
@@ -64,11 +64,11 @@ RSpec.describe 'Carts', type: :feature do
                 end
 
                 it 'displays the correct tax amount' do
-                    expect(page.first("div.cart span.order-tax")).to have_content('$5.00')
+                    expect(page.first("div.cart div.order-tax")).to have_content('$5.00')
                 end
 
                 it 'displays the correct order total' do
-                    expect(page.first("div.cart span.order-total")).to have_content("$120.00")            
+                    expect(page.first("div.cart div.order-total")).to have_content("$130.00")            
                 end
             end
 
@@ -81,19 +81,19 @@ RSpec.describe 'Carts', type: :feature do
                 end
 
                 it 'displays the correct subtotal' do
-                    expect(page.first("div.cart span.order-subtotal")).to have_content('$125.00')
+                    expect(page.first("div.cart div.order-subtotal")).to have_content('$125.00')
                 end
                 
                 it 'displays the discount amount' do
-                    expect(page.first("div.cart span.order-discount")).to have_content('-$25.00')
+                    expect(page.first("div.cart div.order-discount")).to have_content('-$25.00')
                 end
 
                 it 'displays the correct tax amount' do
-                    expect(page.first("div.cart span.order-tax")).to have_content('$4.00')
+                    expect(page.first("div.cart div.order-tax")).to have_content('$4.00')
                 end
 
                 it 'displays the correct order total' do         
-                    expect(page.first("div.cart span.order-total")).to have_content('$96.00')            
+                    expect(page.first("div.cart div.order-total")).to have_content('$104.00')            
                 end
             end 
         end

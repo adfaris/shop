@@ -29,19 +29,29 @@
         <% end %>
     </div>
     <div class="totals">
-        <% if @cart.discount != 0 %>
-            <span class="order-subtotal">
-                <%= @cart.totals(:subtotal) %>
-            </span>
-            <span class="order-discount">
-                -<%= @cart.totals(:discount) %>
-            </span>
+        <% if @cart.discount == 0 %>
+            <div class="order-subtotal">
+                Gross total: <%=@cart.totals(:subtotal) %>
+            </div>
+            <div class="order-tax">
+                Tax: <%= @cart.totals(:tax) %>
+            </div>
+            <div class="order-total">
+                Total: <%= @cart.totals(:total) %>
+            </div>
+        <% else %> 
+            <div class="order-subtotal">
+                Gross total: <%= @cart.totals(:subtotal) %>
+            </div>
+            <div class="order-discount">
+                Discount: -<%= @cart.totals(:discount) %>
+            </div>
+            <div class="order-tax">
+                Tax: <%= @cart.totals(:tax) %>
+            </div>
+            <div class="order-total">
+                Total: <%= @cart.totals(:total) %>
+            </div>
         <% end %>
-        <span class="order-tax">
-            <%= @cart.totals(:tax) %>
-        </span>
-        <span class="order-total">
-            <%= @cart.totals(:total) %>
-        </span>
     </div>
 </div>
