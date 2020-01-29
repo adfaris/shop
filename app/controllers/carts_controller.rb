@@ -27,7 +27,7 @@ class CartsController < ApplicationController
     def set_cart
         if(session[:coupon_id])
             coupon = Coupon.find(session[:coupon_id])
-            @cart = Cart.new(session[:cart], coupon.percent_off)
+            @cart = Cart.new(session[:cart], discount: coupon.percent_off)
         else 
             @cart = Cart.new(session[:cart])
         end 

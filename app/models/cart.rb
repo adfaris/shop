@@ -1,12 +1,14 @@
 class Cart
-    def initialize(item_hash, discount=0.0)
+    def initialize(item_hash, discount: 0.0, tax: 0.04)
         item_hash ||= {}
 
-        raise ArgumentError if item_hash.class != Hash
+        raise ArgumentError if item_hash.class != Hash        
         raise ArgumentError if discount.class != Float
+        raise ArgumentError if tax.class != Float
 
         @items = item_hash
         @discount = discount
+        @tax = tax
     end 
 
     def line_items
@@ -52,6 +54,10 @@ class Cart
 
     def discount
         (subtotal * @discount).round
+    end
+
+    def tax 
+        total * @tax
     end
 
     def total

@@ -4,7 +4,7 @@ RSpec.describe Cart, type: :model do
     describe '.new' do
         context 'valid arguments' do
             it 'does not raise an exception' do
-                expect { Cart.new({1 => 1}, 0.1) }.not_to raise_exception
+                expect { Cart.new({1 => 1}, discount: 0.1, tax: 0.04) }.not_to raise_exception
             end
         end
 
@@ -17,7 +17,13 @@ RSpec.describe Cart, type: :model do
 
             context 'discount is not a Float' do
                 it 'raises an ArgumentError' do
-                    expect { Cart.new({}, "not a float") }.to raise_exception(ArgumentError)
+                    expect { Cart.new({}, discount: "not a float") }.to raise_exception(ArgumentError)
+                end
+            end
+
+            context 'tax is not a Float' do
+                it 'raises an ArgumentError' do
+                    expect { Cart.new({}, tax: 'not a float') }.to raise_exception(ArgumentError)
                 end
             end
         end
@@ -85,7 +91,7 @@ RSpec.describe Cart, type: :model do
             end
 
             context 'there is a 20% off discount applied' do
-                let(:cart) { Cart.new({ product.id => 1}, 0.2) }
+                let(:cart) { Cart.new({ product.id => 1}, discount: 0.2) }
 
                 it 'returns the correct total after discount' do
                     expect(cart.total).to eq(80)
@@ -117,7 +123,7 @@ RSpec.describe Cart, type: :model do
 
             context 'there is a 20% off discount applied' do
                 context 'with one of each each item' do
-                    let(:cart) { Cart.new( { product1.id => 1, product2.id => 1 }, 0.2) }
+                    let(:cart) { Cart.new( { product1.id => 1, product2.id => 1 }, discount: 0.2) }
                     
                     it 'returns the correct total' do
                         expect(cart.total).to eq(2_400)
@@ -125,7 +131,7 @@ RSpec.describe Cart, type: :model do
                 end 
     
                 context 'with multiple of each item' do
-                    let(:cart) { Cart.new({ product1.id => 2, product2.id => 4}, 0.2)}
+                    let(:cart) { Cart.new({ product1.id => 2, product2.id => 4}, discount: 0.2)}
     
                     it 'returns the correct total' do
                         expect(cart.total).to eq(8_000)
@@ -139,7 +145,7 @@ RSpec.describe Cart, type: :model do
         let!(:product) { FactoryBot.create(:product, price_in_cents: 1_000) }
 
         context 'the cart has a discount applied' do
-            let(:cart) { Cart.new({ product.id => 1 }, 0.2) }
+            let(:cart) { Cart.new({ product.id => 1 }, discount: 0.2) }
 
             it 'returns the correct discount' do
                 expect(cart.discount).to eq(200)
@@ -153,6 +159,26 @@ RSpec.describe Cart, type: :model do
                 expect(cart.discount).to eq(0)
             end
         end
+    end
+
+    describe '#tax' do
+        let!(:product) { FactoryBot.create(:product, price_in_cents: 2_000) }
+
+        context 'the cart has a tax applied' do
+            let(:cart) { Cart.new({ product.id => 1 }, discount: 0.2, tax: 0.04) }
+
+            it 'returns the correct tax' do
+                expect(cart.tax).to eq(64)
+            end
+        end
+
+        context 'the cart has no tax applied' do
+            let(:cart) { Cart.new({ product.id => 1}, discount: 0.2, tax: 0.0) }
+
+            it 'returns tax to be zero' do
+                expect(cart.tax).to eq(0)
+            end
+        end 
     end
 
     describe '#line_items' do
@@ -303,7 +329,7 @@ RSpec.describe Cart, type: :model do
         context 'the cart contains multiple quantity of multiple items' do
             let!(:product1) { FactoryBot.create(:product, price_in_cents: 1_000)}
             let!(:product2) { FactoryBot.create(:product, price_in_cents: 2_000)}
-            let(:cart) { Cart.new({ product1.id => 2, product2.id => 4}, 0.2)}
+            let(:cart) { Cart.new({ product1.id => 2, product2.id => 4}, discount: 0.2)}
 
             context 'valid arguments' do
                 context 'request subtotal' do
