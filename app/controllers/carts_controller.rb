@@ -15,25 +15,19 @@ class CartsController < ApplicationController
     end
 
     def update
-        # find coupon with code
-        # if it exists set the session
-        # coupon_id to the id of the coupon
-
-        if params[:coupon_code]
-            session[:coupon_code] = params[:coupon_code]
+        coupon = Coupon.find_by_code(params[:coupon_code])
+        if(coupon) 
+            session[:coupon_id] = coupon.id
         end
         save_and_redirect_to_cart
-    end
+     end
 
     private
 
     def set_cart
-        # if the session has a coupon_id
-        # fetch the coupon from the db
-        # pass the discount into the cart
-
-        if(session[:coupon_code])
-            @cart = Cart.new(session[:cart], 0.2)
+        if(session[:coupon_id])
+            coupon = Coupon.find(session[:coupon_id])
+            @cart = Cart.new(session[:cart], coupon.percent_off)
         else 
             @cart = Cart.new(session[:cart])
         end 

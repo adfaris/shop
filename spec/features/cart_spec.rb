@@ -56,10 +56,12 @@ RSpec.describe 'Carts', type: :feature do
 
             context 'the cart does not have a coupon applied' do
                 it 'does not display an order subtotal' do
-                    
+                    expect(page.first("div.cart span.order-subtotal")).to have_content('$125.00')
                 end
 
                 it 'does not display a discount amount' do
+                    expect(page.first("div.cart span.order-discount")).to have_content('$0.00')
+
                 end
 
                 it 'displays the correct order total' do
@@ -68,6 +70,7 @@ RSpec.describe 'Carts', type: :feature do
             end
 
             context 'the cart has a coupon applied' do
+                let!(:coupon) { FactoryBot.create(:coupon, code: 'Save20', percent_off: 0.2) }
                 before do
                     fill_in('coupon_code', with: 'Save20')
                     click_button('Apply coupon')
