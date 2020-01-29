@@ -64,7 +64,7 @@ RSpec.describe 'Carts', type: :feature do
                 end
 
                 it 'displays the correct order total' do
-                    expect(page).not_to have_selector("div.cart span.order-total")            
+                    expect(page).to have_selector("div.cart span.order-total")            
                 end
             end
 
