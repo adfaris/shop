@@ -37,6 +37,9 @@
                 -<%= @cart.totals(:discount) %>
             </span>
         <% end %>
+        <span class="order-tax">
+            <%= @cart.totals(:tax) %>
+        </span>
         <span class="order-total">
             <%= @cart.totals(:total) %>
         </span>

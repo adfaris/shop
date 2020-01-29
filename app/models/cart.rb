@@ -56,16 +56,20 @@ class Cart
         (subtotal * @discount).round
     end
 
-    def tax 
-        total * @tax
+    def tax
+        total_before_tax * @tax
     end
 
-    def total
+    def total_before_tax
         subtotal - discount
     end
 
+    def total
+        total_before_tax - tax
+    end
+
     def totals(line_name)
-        raise ArgumentError unless [:subtotal, :discount, :total].include?(line_name)
+        raise ArgumentError unless [:subtotal, :discount, :total, :tax, :total_before_tax].include?(line_name)
 
         Money.new(send(line_name))
     end

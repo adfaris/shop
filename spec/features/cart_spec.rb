@@ -63,13 +63,18 @@ RSpec.describe 'Carts', type: :feature do
                     expect(page).not_to have_selector("div.cart span.order-discount")
                 end
 
+                it 'displays the correct tax amount' do
+                    expect(page.first("div.cart span.order-tax")).to have_content('$5.00')
+                end
+
                 it 'displays the correct order total' do
-                    expect(page).to have_selector("div.cart span.order-total")            
+                    expect(page.first("div.cart span.order-total")).to have_content("$120.00")            
                 end
             end
 
             context 'the cart has a coupon applied' do
                 let!(:coupon) { FactoryBot.create(:coupon, code: 'Save20', percent_off: 0.2) }
+
                 before do
                     fill_in('coupon_code', with: 'Save20')
                     click_button('Apply coupon')
@@ -83,8 +88,12 @@ RSpec.describe 'Carts', type: :feature do
                     expect(page.first("div.cart span.order-discount")).to have_content('-$25.00')
                 end
 
+                it 'displays the correct tax amount' do
+                    expect(page.first("div.cart span.order-tax")).to have_content('$4.00')
+                end
+
                 it 'displays the correct order total' do         
-                    expect(page.first("div.cart span.order-total")).to have_content('$100.00')            
+                    expect(page.first("div.cart span.order-total")).to have_content('$96.00')            
                 end
             end 
         end

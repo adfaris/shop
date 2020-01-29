@@ -70,12 +70,12 @@ RSpec.describe Cart, type: :model do
         end
     end
 
-    describe '#total' do
+    describe '#total_before_tax' do
         context 'the  cart is empty' do
             let(:cart) { Cart.new({}) }
 
             it 'returns zero' do
-                expect(cart.total).to be(0)
+                expect(cart.total_before_tax).to be(0)
             end
         end
 
@@ -86,7 +86,7 @@ RSpec.describe Cart, type: :model do
                 let(:cart) { Cart.new({ product.id => 1}) }
 
                 it 'returns the correct total' do
-                    expect(cart.total).to eq(100)
+                    expect(cart.total_before_tax).to eq(100)
                 end
             end
 
@@ -94,7 +94,7 @@ RSpec.describe Cart, type: :model do
                 let(:cart) { Cart.new({ product.id => 1}, discount: 0.2) }
 
                 it 'returns the correct total after discount' do
-                    expect(cart.total).to eq(80)
+                    expect(cart.total_before_tax).to eq(80)
                 end
             end
         end
@@ -108,7 +108,7 @@ RSpec.describe Cart, type: :model do
                     let(:cart) { Cart.new( { product1.id => 1, product2.id => 1 }) }
                     
                     it 'returns the correct total' do
-                        expect(cart.total).to eq(3_000)
+                        expect(cart.total_before_tax).to eq(3_000)
                     end
                 end 
     
@@ -116,7 +116,7 @@ RSpec.describe Cart, type: :model do
                     let(:cart) { Cart.new({ product1.id => 2, product2.id => 4})}
     
                     it 'returns the correct total' do
-                        expect(cart.total).to eq(10_000)
+                        expect(cart.total_before_tax).to eq(10_000)
                     end
                 end                       
             end
@@ -126,7 +126,7 @@ RSpec.describe Cart, type: :model do
                     let(:cart) { Cart.new( { product1.id => 1, product2.id => 1 }, discount: 0.2) }
                     
                     it 'returns the correct total' do
-                        expect(cart.total).to eq(2_400)
+                        expect(cart.total_before_tax).to eq(2_400)
                     end
                 end 
     
@@ -134,7 +134,7 @@ RSpec.describe Cart, type: :model do
                     let(:cart) { Cart.new({ product1.id => 2, product2.id => 4}, discount: 0.2)}
     
                     it 'returns the correct total' do
-                        expect(cart.total).to eq(8_000)
+                        expect(cart.total_before_tax).to eq(8_000)
                     end
                 end   
             end
@@ -344,11 +344,18 @@ RSpec.describe Cart, type: :model do
                     end
                 end
 
-                context 'request total' do
+                context 'request total before tax' do
                     it 'returns the correct price' do
-                      expect(cart.totals(:total).to_s).to eq('$80.00')
+                      expect(cart.totals(:total_before_tax).to_s).to eq('$80.00')
                     end                                      
                 end
+
+                context 'request tax' do
+                    it 'reutrns the correct price' do
+                        expect(cart.totals(:total).to_s).to eq('$76.80')
+                    end
+                end
+
             end
 
             context 'invalid arguments' do
