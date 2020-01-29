@@ -56,16 +56,15 @@ RSpec.describe 'Carts', type: :feature do
 
             context 'the cart does not have a coupon applied' do
                 it 'does not display an order subtotal' do
-                    expect(page.first("div.cart span.order-subtotal")).to have_content('$125.00')
+                    expect(page).not_to have_selector("div.cart span.order-subtotal")
                 end
 
                 it 'does not display a discount amount' do
-                    expect(page.first("div.cart span.order-discount")).to have_content('$0.00')
-
+                    expect(page).not_to have_selector("div.cart span.order-discount")
                 end
 
                 it 'displays the correct order total' do
-                    expect(page.first("div.cart span.order-total")).to have_content('$125.00')            
+                    expect(page).not_to have_selector("div.cart span.order-total")            
                 end
             end
 

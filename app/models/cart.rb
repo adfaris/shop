@@ -95,18 +95,6 @@ class Cart
         end 
     
         def to_s
-            # result = "$"
-            # result += (@cents/100).to_s
-            # result += "."
-            # remainder = (@cents%100).to_s
-            # if(@cents%100 < 10)
-            #     result += "0" + remainder
-            # elsif(remainder.length == 1 )
-            #     result += remainder + "0"
-            # else 
-            #     result += remainder
-            # end
-            # result
             "$%0.2f" % [@cents/100.0]
         end
     end 

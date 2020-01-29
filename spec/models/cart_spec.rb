@@ -197,8 +197,6 @@ RSpec.describe Cart, type: :model do
         end
 
         context 'the cart does not contain this item' do
-            let(:cart) {Cart.new({})}
-
             it 'sets the quantity to one' do
                 expect(cart.add_by_id(1).quantity).to eq(1)
             end
