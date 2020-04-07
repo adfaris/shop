@@ -2,14 +2,14 @@ class Cart
     def initialize(item_hash, discount: 0.0, tax: 0.04)
         item_hash ||= {}
 
-        raise ArgumentError if item_hash.class != Hash        
+        raise ArgumentError if item_hash.class != Hash
         raise ArgumentError if discount.class != Float
         raise ArgumentError if tax.class != Float
 
         @items = item_hash
         @discount = discount
         @tax = tax
-    end 
+    end
 
     def line_items
         result = []
@@ -33,7 +33,7 @@ class Cart
         else
            nil
         end
-    end 
+    end
 
     def to_h
         # test passed with this code
@@ -41,20 +41,27 @@ class Cart
         #     hash_item = @items
         # hash_item
         @items
-    end 
+    end
 
-    def subtotal 
+    def subtotal
         # result = 0
         # line_items.each do |item|
         #     result += item.product.price_in_cents * item.quantity
         # end
         # result
-        line_items.inject(0) { | subtotal, item | subtotal += item.total  } 
-    end 
+        line_items.inject(0) { | subtotal, item | subtotal += item.total  }
+    end
 
     def discount
         (subtotal * @discount).round
     end
+
+    # def checkout
+    #     subtotal = 0
+    #     discount = 0
+    #     tax = 0
+    #     total = 0
+    # end
 
     def tax
         total_before_tax * @tax
@@ -88,24 +95,24 @@ class Cart
 
         def total
             product.price_in_cents * quantity
-        end 
+        end
 
         def unit_price
             Money.new(product.price_in_cents)
-        end 
+        end
 
         def price
             Money.new(total)
         end
-    end 
+    end
 
-    class Money 
-        def initialize(cents) 
+    class Money
+        def initialize(cents)
             @cents = cents
-        end 
-    
+        end
+
         def to_s
             "$%0.2f" % [@cents/100.0]
         end
-    end 
-end 
+    end
+end

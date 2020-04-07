@@ -2,7 +2,8 @@ class CartsController < ApplicationController
     before_action :set_cart, only: [:view, :add, :remove, :update]
 
     def view
-    end 
+        render 'carts/view'
+    end
 
     def add
         @cart.add_by_id(params[:product_id])
@@ -16,11 +17,17 @@ class CartsController < ApplicationController
 
     def update
         coupon = Coupon.find_by_code(params[:coupon_code])
-        if(coupon) 
+        if(coupon)
             session[:coupon_id] = coupon.id
         end
         save_and_redirect_to_cart
      end
+
+     def checkout
+        session[:cart] = nil
+        @cart = Cart.new({})
+        render :view
+    end
 
     private
 
@@ -28,13 +35,13 @@ class CartsController < ApplicationController
         if(session[:coupon_id])
             coupon = Coupon.find(session[:coupon_id])
             @cart = Cart.new(session[:cart], discount: coupon.percent_off, tax: 0.04)
-        else 
+        else
             @cart = Cart.new(session[:cart], tax: 0.04)
-        end 
+        end
     end
 
-    def save_and_redirect_to_cart 
-        session[:cart] = @cart.to_h 
-        redirect_to(cart_path)
+    def save_and_redirect_to_cart
+        session[:cart] = @cart.to_h
+        render :view
     end
 end
