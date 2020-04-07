@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   post '/cart', to: 'carts#add', as: 'add_to_cart'
   delete '/cart', to: 'carts#remove', as: 'remove_from_cart'
   patch '/cart', to: 'carts#update', as: 'update_cart'
+  get '/checkout', to:'carts#checkout', as: 'checkout_cart'
 
   # get '/', to: redirect { urls.products_path }, as: "root"
   root to: redirect { urls.products_path }

@@ -1,37 +1,42 @@
-
 <div class="cart">
     <h1> Your cart </h1>
 
-    <ul class="items"> 
+    <ul class="items">
         <% @cart.line_items.each do |item| %>
-            <li class="product-<%= item.product.id %>"> 
+            <li class="product-<%= item.product.id %>">
 
-                <span class="quantity"> 
+                <span class="quantity">
                     <%= item.quantity %>
                 </span>
 
                 <%= link_to item.product.name, product_path(item.product) %>
                 <%= item.unit_price %>
-                
-                <span class="total"> 
+
+                <span class="total">
                     <%= item.price %>
                 </span>
-                
+
                 <%= button_to "X", remove_from_cart_path, method: :delete, params: {product_id: item.product.id} %>
-            
+
             </li>
         <% end%>
     </ul>
-    <div class="apply-coupon"> 
-        <%= form_with(url: update_cart_path, method: :patch) do |form| %> 
+    <div class="apply-coupon">
+        <%= form_with(url: update_cart_path, method: :patch) do |form| %>
             <%= form.text_field :coupon_code %>
             <%= form.submit "Apply coupon" %>
         <% end %>
     </div>
+
+    <div class="Continue shopping">
+        <p> <%= link_to 'Continue shopping', products_path unless current_page?(products_path) %> </p>
+        <p> <%= link_to 'Empty cart', checkout_cart_path %> </p>
+    </div>
+
     <div class="totals">
         <% if @cart.discount == 0 %>
             <div class="order-subtotal">
-                Gross total: <%=@cart.totals(:subtotal) %>
+                Gross total: <%= @cart.totals(:subtotal) %>
             </div>
             <div class="order-tax">
                 Tax: <%= @cart.totals(:tax) %>
@@ -39,7 +44,7 @@
             <div class="order-total">
                 Total: <%= @cart.totals(:total) %>
             </div>
-        <% else %> 
+        <% else %>
             <div class="order-subtotal">
                 Gross total: <%= @cart.totals(:subtotal) %>
             </div>
