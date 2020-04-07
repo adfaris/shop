@@ -1,6 +1,6 @@
-<div class="product"> 
+<div class="product">
     <h1> <%= @product.name %> </h1>
         <p> <%= @product.body %> </p>
-        <p> <%= @product.price_in_cents %> </p>
-        <p> <%= button_to "Add to cart", add_to_cart_path, params: { product_id: @product.id } %></p>
+        <p> <%= @product.price_in_cents.to_s %> </p>
+        <p> <%= button_to "Add to cart", add_to_cart_path, params: { product_id: @product.id } %> </p>
 </div>

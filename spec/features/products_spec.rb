@@ -6,7 +6,7 @@ RSpec.describe 'Products', type: :feature do
     context 'list products' do
         before do
             visit products_path
-        end 
+        end
 
         it 'displays the product list' do
             expect(page).to have_selector('ul.products')
@@ -19,7 +19,7 @@ RSpec.describe 'Products', type: :feature do
         it 'links to product show page' do
             click_on(product.name)
             expect(page.current_path).to eq(product_path(product))
-        end 
+        end
     end
 
     context 'show product' do
@@ -27,27 +27,27 @@ RSpec.describe 'Products', type: :feature do
             visit product_path(product)
         end
 
-        it 'displays a product' do 
+        it 'displays a product' do
             expect(page).to have_selector('div.product')
-        end 
+        end
 
-        it 'displays the requested product' do 
+        it 'displays the requested product' do
             expect(page).to have_content(product.name)
-        end 
+        end
 
         it 'displays the product description' do
             expect(page).to have_content(product.body)
-        end 
+        end
 
-        it 'displays the product price' do 
+        it 'displays the product price' do
             expect(page).to have_content(product.price_in_cents)
-        end 
+        end
     end
 
     # context 'show price' do
-    #     it 'shows price on page' do 
+    #     it 'shows price on page' do
     #         expect(page).to have_selector(ul.price)
-    #     end 
+    #     end
     # end
 
 end

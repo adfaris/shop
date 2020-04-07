@@ -24,11 +24,11 @@ RSpec.describe 'Navigation', type: :feature do
     end
 
     context 'from the show page' do
-        before do 
+        before do
             visit(product_path(product))
-        end 
+        end
 
-        it 'navigates to the cart page' do 
+        it 'navigates to the cart page' do
             click_on('View cart')
             expect(page.current_path).to eq(cart_path)
         end
@@ -47,18 +47,18 @@ RSpec.describe 'Navigation', type: :feature do
         it 'navigates to products list page' do
             click_on('Home')
             expect(page.current_path).to eq(products_path)
-        end 
+        end
 
-        context 'the cart is not empty' do 
-            before do 
+        context 'the cart is not empty' do
+            before do
                 visit(product_path(product))
                 click_on('Add to cart')
-            end 
+            end
 
-            it 'navigates to the show page' do 
+            it 'navigates to the show page' do
                 click_on(product.name)
                 expect(page.current_path).to eq(product_path(product))
-            end 
+            end
         end
     end
 end
